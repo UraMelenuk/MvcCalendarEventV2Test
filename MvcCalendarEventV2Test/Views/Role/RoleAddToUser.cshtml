@@ -1,0 +1,22 @@
+﻿@{
+    ViewBag.Title = "RoleAddToUser";
+}
+
+<h2>Role Add to User</h2>
+
+@using (Html.BeginForm("RoleAddToUser", "Role"))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <p>
+        Username : @Html.DropDownList("UserName", (IEnumerable<SelectListItem>)ViewBag.Users)
+        Role Name: @Html.DropDownList("RoleName", (IEnumerable<SelectListItem>)ViewBag.Roles)
+        <input type="submit" value="Save" class="btn btn-success" style="margin-left:20px;" />
+    </p>
+
+}
+<br />
+<div>
+    <input type="button" class="btn btn-primary" value="Back to Role" onclick="location.href='@Url.Action("Index", "Role")'" />
+</div>

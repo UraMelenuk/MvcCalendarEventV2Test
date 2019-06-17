@@ -1,0 +1,43 @@
+﻿@model IEnumerable<MvcCalendarEventV2Test.Models.CalendarClassRoom>
+@{
+    ViewBag.Title = "CalendarRoom";
+}
+
+<h2>ClassRoom</h2>
+
+<p>
+    <input type="button" class="btn btn-success" value="Create new" onclick="location.href='@Url.Action("Create", "CalendarClassRoom")'" />
+</p>
+<table class="table table-bordered table-hover" style="text-align:center;">
+    <thead style="background-color:grey; color:white;">
+        <tr>
+            <th style="text-align:center;">
+                @Html.DisplayNameFor(model => model.ClassRoomName)
+            </th>
+            <th style="text-align:center;">
+                @Html.DisplayNameFor(model => model.ClassRoomPlace)
+            </th>
+            <th style="text-align:center;">
+                Button Edit/Delete
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ClassRoomName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ClassRoomPlace)
+                </td>
+                <td>
+                    <input style="margin-right:5px;" type="button" class="btn btn-warning" value="Edit" onclick="location.href='@Url.Action("Edit", "CalendarClassRoom", new { id = item.ClassRoomId })'" />
+                    <input type="button" class="btn btn-danger" value="Delete" onclick="location.href='@Url.Action("Delete", "CalendarClassRoom", new { id = item.ClassRoomId })'" />
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>

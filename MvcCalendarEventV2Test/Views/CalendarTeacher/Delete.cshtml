@@ -1,0 +1,37 @@
+﻿@model MvcCalendarEventV2Test.Models.CalendarTeacher
+@{
+    ViewBag.Title = "Delete";
+}
+<h2>Teachers</h2>
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.TeacherName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TeacherName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TeacherEmail)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TeacherEmail)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        <div class="form-actions no-color">
+            <input style="margin-right:10px;" type="button" class="btn btn-primary" value="Back to List" onclick="location.href='@Url.Action("Index", "CalendarTeacher")'" />
+            <input type="submit" class="btn btn-danger" value="Delete" onclick="location.href='@Url.Action("Delete", "CalendarTeacher")'" />
+        </div>
+    }
+</div>

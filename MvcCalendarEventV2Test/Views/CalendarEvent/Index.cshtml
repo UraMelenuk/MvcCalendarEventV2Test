@@ -1,0 +1,229 @@
+﻿@model MvcCalendarEventV2Test.Models.EventViewModel
+@{
+    ViewBag.Title = "Events";
+}
+
+<h2>Events</h2>
+<!-- btn Add Edit -->
+<a href="#" class="btn btn-success" onclick="AddEditEvent(0)">Create new</a>
+
+<!-- all to excel file save --> 
+<a class="btn btn-primary" style="margin-left:10px;" href="@Url.Action("ExportAllToExcel","CalendarEvent")">Export All To Excel </a>
+
+
+<!-- save selected data to the excel file -->
+<input type="button" class="btn btn-info" style="margin-left:10px;" value="Save Selected Data To The Excel" onclick="location.href='@Url.Action("SaveSelectedDataToTheExcelFile", "CalendarEvent")'" />
+
+
+<!-- Search The Table -->
+<hr />
+<div class="container" style="width:30%; margin-bottom:5px;">
+
+    @using (@Html.BeginForm("Index", "CalendarEvent", FormMethod.Get))
+    {
+        <div hidden>
+            @Html.RadioButton("searchBy", "searchAll ", true)<text> Search-Form-Class-Group-Subject-Teacher </text>
+            <br />
+        </div>
+            @Html.TextBox("search")
+            <input type="submit" value="Search" style="margin-left:10px; width:95px;" />
+    }
+</div>
+
+<!-- Show Table Event -->
+<table class="table table-bordered table-hover" style="text-align:center;">
+    <thead style="background-color:grey; color:white;">
+        <tr>
+            <th style="text-align:center;">FormName</th>
+            <th style="text-align:center;">GroupName</th>
+            <th style="text-align:center;">ClassRoomName</th>
+            <th style="text-align:center;">SubjectName</th>
+            <th style="text-align:center;">TeacherName</th>
+            <th style="text-align:center;">DateStart</th>
+            <th style="text-align:center;">DateEnd</th>
+            <th style="text-align:center;">IsFullDay</th>
+            <th style="text-align:center;">Edit</th>
+            <th style="text-align:center;">Details</th>
+            <th style="text-align:center;">Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (ViewBag.EventList != null)
+        {
+            foreach (var item in ViewBag.EventList)
+            {
+                <tr id="row_@item.EventID">
+                    <td>@item.FormName</td>
+                    <td>@item.ClassRoomName</td>
+                    <td>@item.GroupName</td>
+                    <td>@item.SubjectName</td>
+                    <td>@item.TeacherName</td>
+                    <td>@item.Start</td>
+                    <td>@item.End</td>
+                    <td>@item.IsFullDay</td>
+                    <td><a href="#" class="btn btn-info" onclick="AddEditEvent(@item.EventID)"><i class="glyphicon glyphicon-pencil"></i></a></td>
+                    <td><a href="#" class="btn btn-warning" onclick="ShowEvent(@item.EventID)"><i class="glyphicon glyphicon-eye-open"></i></a></td>
+                    <td><a href="#" class="btn btn-danger" onclick="ConfirmDelete(@item.EventID)"><i class="glyphicon glyphicon-trash"></i></a></td>
+                </tr>
+            }
+            if (ViewBag.EventList.Count == 0)
+            {
+                <tr>
+                    <td colspan="11" style="color:white; background-color:red;"><big><b>No rows matching the search criteria were found</b></big></td>
+                </tr>
+            }
+        }
+    </tbody>
+
+
+
+</table>
+<input type="hidden" id="hiddenEventId" />
+
+<!-- AddEdit Form Event-->
+<div class="modal fade" id="myModalCreate">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h3 class="modal-title">Add/Edit Event</h3>
+            </div>
+            <div class="modal-body" id="myModalBodyDivCreate">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Form Event -->
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h3 class="modal-title">Delete Event</h3>
+            </div>
+            <div class="modal-body">
+                <h4> Are you sure ? You want to delete this.</h4>
+                <br />
+                <div style="text-align:center;display:none;" id="loaderDiv">
+                    <img src="~/fonts/Loading.gif" width="75" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="btn btn-danger" data-dismiss="modal">Cancel</a>
+                <a href="#" class="btn btn-success" onclick="DeleteEvent()">Confirm</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Show Form Details -->
+<div class="modal fade" id="myModalDetails">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h3 class="modal-title">Details Event</h3>
+            </div>
+            <div class="modal-body" id="myModalBodyDiv">
+                <br />
+                <div style="text-align:center;display:none;" id="loaderDiv">
+                    <img src="~/fonts/Loading.gif" width="75" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="btn btn-danger" data-dismiss="modal">Cancel</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+
+<script src="~/Scripts/jquery-1.12.4.min.js"></script>
+<script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+@*<script src="~/Scripts/jquery-1.10.2.min.js"></script>*@
+
+@section Scripts{
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+
+<script>
+
+    $(document).ready(function () {
+
+        $("#btnSubmit").click(function () {
+            $("#loaderDiv").show();
+
+            var myformdata = $("#myForm").serialize();
+
+            $.ajax({
+
+                type: "POST",
+                url: "/CalendarEvent/Index",
+                data: myformdata,
+                success: function () {
+                    $("#loaderDiv").hide();
+                    $("#myModal").modal("hide");
+
+                }
+            })
+        })
+
+    })
+
+    /////////////////////////////////////////////   Delete Event
+    var ConfirmDelete = function (EventId) {
+        $("#hiddenEventId").val(EventId);
+        $("#myModal").modal('show');
+    }
+    ///
+
+    var DeleteEvent = function () {
+        $("#loaderDiv").show();
+
+        var eventId = $("#hiddenEventId").val();
+
+        $.ajax({
+
+            type: "POST",
+            url: "/CalendarEvent/DeleteEvent",
+            data: { EventId: eventId },
+            success: function (result) {
+                $("#loaderDiv").hide();
+                $("#myModal").modal("hide");
+                $("#row_" + eventId).remove();
+            }
+        })
+    }
+    ///
+
+    /////////////////////////////////////////////   Show Event
+    var ShowEvent = function (eventId) {
+        var url = "/CalendarEvent/ShowEvent?EventID=" + eventId;
+
+        $("#myModalBodyDiv").load(url, function () {
+            $("#myModalDetails").modal("show");
+        })
+
+    }
+    ///
+
+    /////////////////////////////////////////////   AddEdit Event
+    var AddEditEvent = function (eventId) {
+        var url = "/CalendarEvent/AddEditEvent?EventID=" + eventId;
+
+        $("#myModalBodyDivCreate").load(url, function () {
+            $("#myModalCreate").modal("show");
+        })
+    }
+
+
+</script>
+    }
+
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>

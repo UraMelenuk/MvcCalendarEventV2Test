@@ -1,0 +1,38 @@
+﻿@model IEnumerable<MvcCalendarEventV2Test.Models.CalendarForm>
+
+@{
+    ViewBag.Title = "Forms";
+}
+
+<h2>Form_of_Study</h2>
+
+<p>
+    <input type="button" class="btn btn-success" value="Create new" onclick="location.href='@Url.Action("Create", "CalendarForm")'" />
+</p>
+<table class="table table-bordered table-hover" style="text-align:center;">
+    <thead style="background-color:grey; color:white;">
+        <tr>
+            <th style="text-align:center;">
+                @Html.DisplayNameFor(model => model.FormName)
+            </th>
+            <th style="text-align:center;">
+                Button Edit/Delete
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FormName)
+                </td>
+                <td>
+                    <input style="margin-right:5px;" type="button" class="btn btn-warning" value="Edit" onclick="location.href='@Url.Action("Edit", "CalendarForm", new { id = item.FormId })'" />
+                    <input type="button" class="btn btn-danger" value="Delete" onclick="location.href='@Url.Action("Delete", "CalendarForm", new { id = item.FormId })'" />
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>

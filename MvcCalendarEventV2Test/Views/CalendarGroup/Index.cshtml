@@ -1,0 +1,43 @@
+﻿@model IEnumerable<MvcCalendarEventV2Test.Models.CalendarGroup>
+@{
+    ViewBag.Title = "Groups";
+}
+
+<h2>Groups</h2>
+
+<p>
+    <input type="button" class="btn btn-success" value="Create new" onclick="location.href='@Url.Action("Create", "CalendarGroup")'" />
+</p>
+<table class="table table-bordered table-hover" style="text-align:center;">
+    <thead style="background-color:grey; color:white;">
+        <tr>
+            <th style="text-align:center;">
+                @Html.DisplayNameFor(model => model.GroupName)
+            </th>
+            <th style="text-align:center;">
+                @Html.DisplayNameFor(model => model.GroupCountPeople)
+            </th>
+            <th style="text-align:center;">
+                Button Edit/Delete
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GroupName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GroupCountPeople)
+                </td>
+                <td>
+                    <input style="margin-right:5px;" type="button" class="btn btn-warning" value="Edit" onclick="location.href='@Url.Action("Edit", "CalendarGroup", new { id = item.GroupId })'" />
+                    <input type="button" class="btn btn-danger" value="Delete" onclick="location.href='@Url.Action("Delete", "CalendarGroup", new { id = item.GroupId })'" />
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>

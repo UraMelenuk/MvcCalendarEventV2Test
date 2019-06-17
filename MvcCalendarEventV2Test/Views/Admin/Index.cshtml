@@ -1,0 +1,66 @@
+﻿@model IEnumerable<MvcCalendarEventV2Test.Models.User>
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="box-title"><b>Users with Roles</b></h3>
+        <p>
+            <input type="button" class="btn btn-warning" value="Roles" onclick="location.href='@Url.Action("Index", "Role")'" />
+        </p>
+    </div>
+    <!-- /.box-header -->
+    <div class="panel-body">
+        <table class="table table-hover table-bordered table-condensed" id="UsersWithRoles">
+            <thead>
+                <tr>
+                    <td style="text-align:center;"><b>UserName</b></td>
+                    <td style="text-align:center;"><b>Email</b></td>
+                    <td style="text-align:center;"><b>Roles</b></td>
+                    <td style="text-align:center;"><b>Action</b></td>
+                </tr>
+            </thead>
+           
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td style="text-align:center;">@user.Username</td>
+                    <td style="text-align:center;">@user.Email</td>
+                    <td style="text-align:center;">@user.Role</td>
+                    <td style="text-align:center;">
+                        @if (user.Username == "admin@gmail.com")
+                        {
+                            <input disabled type="button" class="btn btn-danger" value="Delete" onclick="location.href='@Url.Action("Delete", "Admin", new { id = user.UserId })'" />
+                        }
+                        else
+                        {
+                            <input type="button" class="btn btn-danger" value="Delete" onclick="location.href='@Url.Action("Delete", "Admin", new { id = user.UserId })'" />
+                        }
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+
+    <div class="panel-footer">
+        <p class="box-title"><b>Total Users till @String.Format("{0 : dddd, MMMM d, yyyy}", DateTime.Now)  : </b><span class="label label-primary">@Model.Count()</span></p>
+    </div>
+</div>
+
+
+@section scripts{
+    <script>
+
+        $(function () {
+            $('#UsersWithRoles').DataTable({
+                "paging": true,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": true
+            });
+        });
+    </script>
+}

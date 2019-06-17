@@ -1,0 +1,45 @@
+﻿@model IEnumerable<MvcCalendarEventV2Test.Models.CalendarTeacher>
+@{
+    ViewBag.Title = "Teachers";
+}
+
+<h2>Teachers</h2>
+
+<p>
+    <input type="button" class="btn btn-success" value="Create new" onclick="location.href='@Url.Action("Create", "CalendarTeacher")'" />
+</p>
+
+<table class="table table-bordered table-hover" style="text-align:center;">
+    <thead style="background-color:grey; color:white;">
+        <tr>
+            <th style="text-align:center;">
+                @Html.DisplayNameFor(model => model.TeacherName)
+            </th>
+            <th style="text-align:center;">
+                @Html.DisplayNameFor(model => model.TeacherEmail)
+            </th>
+            <th style="text-align:center;">
+                Button Edit/Delete/Document
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TeacherName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TeacherEmail)
+                </td>
+                <td>
+                    <input style="margin-right:5px;" type="button" class="btn btn-warning" value="Edit" onclick="location.href='@Url.Action("Edit", "CalendarTeacher", new { id = item.TeacherId })'" />
+                    <input type="button" class="btn btn-danger" value="Delete" onclick="location.href='@Url.Action("Delete", "CalendarTeacher", new { id = item.TeacherId })'" />
+                    <input style="margin-left:5px;" type="button" class="btn btn-info" value="Email" onclick="location.href='@Url.Action("Contact", "CalendarTeacher", new { id = item.TeacherId })'" />
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>

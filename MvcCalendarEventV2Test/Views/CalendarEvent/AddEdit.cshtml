@@ -1,0 +1,227 @@
+﻿@model MvcCalendarEventV2Test.Models.EventViewModel
+
+<div>
+    <form id="myForm" style="margin-left:22%;">
+        @Html.HiddenFor(model => model.EventID)
+
+        <div class="form-group">
+            <b>FormName *</b>
+            @Html.DropDownListFor(model => model.FormId, ViewBag.FormList as SelectList, "-- Select Form --", new { @class = "form-control" })
+        </div>
+
+        <div class="form-group">
+            <b>ClassRoomName *</b>
+            @Html.DropDownListFor(model => model.ClassRoomId, ViewBag.ClassRoomList as SelectList, "-- Select ClassRoom --", new { @class = "form-control" })
+        </div>
+
+        <div class="form-group">
+            <b>GroupName *</b>
+            @Html.DropDownListFor(model => model.GroupId, ViewBag.GroupList as SelectList, "-- Select Group --", new { @class = "form-control" })
+        </div>
+
+        <div class="form-group">
+            <b>SubjectName *</b>
+            @Html.DropDownListFor(model => model.SubjectId, ViewBag.SubjectList as SelectList, "-- Select Subject --", new { @class = "form-control" })
+        </div>
+
+        <div class="form-group">
+            <b>TeacherName *</b>
+            @Html.DropDownListFor(model => model.TeacherId, ViewBag.TeacherList as SelectList, "-- Select Teacher --", new { @class = "form-control" })
+        </div>
+
+        <div class="form-group" id="divStartDate">
+            <b>DateStart *</b>
+            @*@Html.TextBoxFor(model => model.Start, new { @class = "form-control", type = "datetime-local" })*@
+            @Html.TextBoxFor(model => model.Start, new { @class = "form-control", @placeholder= DateTime.Now.ToShortDateString() + " " + "06:00" })
+            @*<input type='text' class="form-control" id='Start' />*@
+        </div>
+
+        <div class="form-group">
+            @*<div class="checkbox">
+                <label><input type="checkbox" id="chkIsFullDay" checked="checked" /><b> Is Full Day Event</b> </label>
+            </div>
+            *@
+            <div class="checkbox">
+                <b>IsFullDay</b>
+                @Html.EditorFor(model => model.IsFullDay, new { htmlAttributes = new { @class = "chkIsFullDay" } })
+                @*@Html.CheckBox("chk_", abc.IsChecked, new { @class = "checkbox" })*@
+                @*@Html.CheckBox("chkIsFullDay", true)*@
+            </div>
+        </div>
+
+        <div class="form-group" id="divEndDate" >
+            <b>DateEnd *</b>
+            @Html.TextBoxFor(model => model.End, new { @class = "form-control" })
+            @*<input type='text' class="form-control" id='End' />*@
+        </div>
+        <div class="form-group">
+            <b>ThemeColor</b>
+            <select id="ThemeColor" name="ThemeColor" class="form-control">
+                <option value="">Default</option>
+                <option value="red">Red</option>
+                <option value="indigo">Indigo</option>
+                <option value="blue">Blue</option>
+                <option value="yellow">Yellow</option>
+                <option value="black">Black</option>
+                <option value="grey">Grey</option>
+                <option value="green">Green</option>
+                <option value="aqua">Aqua</option>
+                <option value="orange">Orange</option>
+                <option value="gold">Gold</option>
+                <option value="darkblue">DarkBlue</option>
+                <option value="pink">Pink</option>
+                <option value="violet">Violet</option>
+                <option value="magenta">Magenta</option>
+                <option value="purple">Purple</option>
+                <option value="lime">Lime</option>
+                <option value="olive">Olive</option>
+                <option value="dodgerblue">LightBlue</option>
+                <option value="brown">Brown</option>
+                <option value="lightcoral">LightCoral</option>
+                <option value="seagreen">SeaGreen</option>
+                <option value="chocolate">Chocolate</option>
+                <option value="orangered">OrangeRed</option>
+                <option value="teal">Teal</option>
+                <option value="springgreen">SpringGreen</option>
+                <option value="khaki">Khaki</option>
+                <option value="darkslategrey">DarkSlateGrey</option>
+                <option value="deeppink">DeepPink</option>
+                <option value="greenyellow">GreenYellow</option>
+                <option value="aquamarine">Aquamarine</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <b>Description</b>
+            @Html.TextAreaFor(model => model.Description, new { @class = "form-control" })
+        </div>
+
+            <br />
+        <div class="form-group">
+            <a href="#" class="btn btn-danger" data-dismiss="modal">Cancel</a>
+            <a href="#" id="btnSubmit" class="btn btn-success" style="margin-left:32%;">
+                @if (Model.EventID > 0)
+            {<span>Update</span>}
+            else
+            { <span>Insert</span>}
+            </a>
+        </div>
+
+</form>
+
+    <!-- image loading -->
+    <div style="text-align:center;display:none;" id="loaderDiv">
+        <img src="~/fonts/Loading.gif" width="75" />
+    </div>
+
+</div>
+
+
+
+
+
+<script>
+    $(document).ready(function () {
+
+        $('#Start').datetimepicker({
+            //locale: 'ru',
+            format: 'DD/MM/YYYY HH:mm ',
+            minDate: '01/01/2015 00:00',
+            //daysOfWeekDisabled: [0, 6],   // суббота , воскресение
+            defaultDate: new Date(),
+
+        });
+
+        $('#End').datetimepicker({
+            //locale: 'ru',
+            format: 'DD/MM/YYYY HH:mm ',
+            minDate: '01/01/2015 00:00',
+            //daysOfWeekDisabled: [0, 6],   // суббота , воскресение
+            defaultDate: new Date(),
+            
+        });
+
+        $('.chkIsFullDay').change(function () {
+            if ($(this).is(':checked')) {       // скрыть дату 2
+                $('#divStartDate').show();
+                $('#divEndDate').hide();
+            }
+            else {
+                $('#divEndDate').show();        // показать дату 2
+            }
+        });
+
+        $("#btnSubmit").click(function () {
+            // маленькая Валидация
+
+            // форма
+            if ($('#FormId').val().trim() == "") {
+                alert('Form required !');
+                return;
+            }
+            // аудитория
+            if ($('#ClassRoomId').val().trim() == "") {
+                alert('ClassRoom required !');
+                return;
+            }
+            // группа
+            if ($('#GroupId').val().trim() == "") {
+                alert('Group required !');
+                return;
+            }
+            // предмет
+            if ($('#SubjectId').val().trim() == "") {
+                alert('Subject required !');
+                return;
+            }
+            // преподаватель
+            if ($('#TeacherId').val().trim() == "") {
+                alert('Teacher required !');
+                return;
+            }
+            // дата 1
+            if ($('#Start').val().trim() == "") {
+                alert('Start Date required !');
+                return;
+            }
+            // флажок
+            if ($('#IsFullDay').is(':checked') == false && $('#End').val().trim() == "") {
+                alert('End Date required !');
+                return;
+            }
+            else {
+                var startDate = moment($('#Start').val(), "DD/MM/YYYY HH:mm ").toDate();
+                var endDate = moment($('#End').val(), "DD/MM/YYYY HH:mm ").toDate();
+
+                if (startDate > endDate) {
+                    alert('Invalid End Date');
+                    return;
+                }
+            }
+            //
+            
+
+
+
+
+
+            $("#loaderDiv").show();
+
+            var myformdata = $("#myForm").serialize();
+
+            $.ajax({
+                type: "POST",
+                url: "/CalendarEvent/Index",
+                data: myformdata,
+                success: function () {
+                    $("#loaderDiv").hide();
+                    $("#myModel").modal("hide");
+                    window.location.href = "/CalendarEvent/Index";
+                }
+            })
+
+        })
+    })
+
+
+</script>

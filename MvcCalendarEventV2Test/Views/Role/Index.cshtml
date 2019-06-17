@@ -1,0 +1,49 @@
+﻿@model IEnumerable<Microsoft.AspNet.Identity.EntityFramework.IdentityRole>
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Roles Listing </h2>
+<hr />
+<p>
+    <input type="button" class="btn btn-success" value="RoleAdd" onclick="location.href='@Url.Action("RoleAddToUser", "Role")'" />
+    <input type="button" class="btn btn-info" value="RoleGet" onclick="location.href='@Url.Action("GetRoles", "Role")'" />
+    <input type="button" class="btn btn-danger" value="RoleDelete" onclick="location.href='@Url.Action("DeleteRoleForUser", "Role")'" />
+</p>
+<hr />
+<div>
+    @foreach (var role in Model)
+    {
+        if (@role.Name == "admin")
+        {
+            <p>
+                <strong> role - @role.Name </strong>
+                <text style="color:green; margin-left:20px;"> full access to viewing, adding, editing, deleting  </text>
+            </p>
+        }
+        else
+        {
+            if (@role.Name == "assistant")
+            {
+                <p>
+                    <strong>role - @role.Name </strong>
+                    <text style="color:orange; margin-left:20px;"> access only for viewing, adding, editing </text>
+                </p>
+            }
+            else
+            {
+                if (@role.Name == "user")
+                {
+                    <p>
+                        <strong>role - @role.Name </strong>
+                        <text style="color:red; margin-left:20px;"> access only for viewing </text>
+                    </p>
+                }
+            }
+        }
+
+    }
+</div>
+<div>
+    <input type="button" class="btn btn-primary" value="Back to List" onclick="location.href='@Url.Action("Index", "Admin")'" />
+</div>

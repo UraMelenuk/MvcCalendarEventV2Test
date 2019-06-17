@@ -1,0 +1,487 @@
+﻿@model MvcCalendarEventV2Test.Models.EventViewModel
+@{
+    ViewBag.Title = "Calendar Events";
+}
+
+<h2>Calendar</h2>
+<br />
+
+
+<!-- calendar -->
+<div id="calender"></div>
+
+<!-- Event Details-->
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><span id="eventTitle"></span></h4>
+            </div>
+            <div class="modal-boby">
+                <!-- кнопка удаления -->
+                <button id="btnDelete" class="btn btn-danger btn-sm pull-right" style="margin-right:5px;">
+                    <span class="glyphicon glyphicon-remove"></span> Remove
+                </button>
+                <!-- кнопка редактирования -->
+                <button id="btnEdit" class="btn btn-warning btn-sm pull-right" style="margin-right:10px;">
+                    <span class="glyphicon glyphicon-pencil"></span> Edit
+                </button>
+                <p id="pDetails" style="margin-left:15px; margin-top:10px;"></p>
+            </div>
+            <div class="modal-footer">
+                <!-- кнопка для закрития -->
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Event Add/Edit -->
+<div id="myModalSave" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h3 class="modal-title">Add/Edit Event</h3>
+            </div>
+            <div class="modal-boby">
+                <form class="col-md-12 form-horizontal">
+                    <input type="hidden" id="hdEventID" value="0" />
+                    <p></p>
+                    <div class="form-group" style="margin-left:25%;">
+                        <label>Form *</label>
+                        @*@Html.DropDownList("FormID", ViewBag.FormList as SelectList, new { @class = "form-control" })*@
+                        @Html.DropDownList("FormId", ViewBag.FormList as SelectList, "-- Select Form --", new { @class = "form-control txtForm" })
+                    </div>
+
+                    <div class="form-group" style="margin-left:25%;">
+                        <label>Class *</label>
+                        @*@Html.DropDownList("ClassRoomID", ViewBag.ClassRoomList as SelectList, new { @class = "form-control" })*@
+                        @Html.DropDownList("ClassRoomId", ViewBag.ClassRoomList as SelectList, "-- Select Class --", new { @class = "form-control txtClassRoom" })
+                    </div>
+
+                    <div class="form-group" style="margin-left:25%;">
+                        <label>Group *</label>
+                        @*@Html.DropDownList("GroupID", ViewBag.GroupList as SelectList, new { @class = "form-control" })*@
+                        @Html.DropDownList("GroupId", ViewBag.GroupList as SelectList, "-- Select Group --", new { @class = "form-control txtGroup" })
+                    </div>
+
+                    <div class="form-group" style="margin-left:25%;">
+                        <label>Subject *</label>
+                        @*@Html.DropDownList("SubjectID", ViewBag.SubjectList as SelectList, new { @class = "form-control" })*@
+                        @Html.DropDownList("SubjectId", ViewBag.SubjectList as SelectList, "-- Select Subject --", new { @class = "form-control txtSubject" })
+                    </div>
+
+                    <div class="form-group" style="margin-left:25%;">
+                        <label>Teacher *</label>
+                        @*@Html.DropDownList("TeacherID", ViewBag.TeacherList as SelectList,  new { @class = "form-control" })*@
+                        @Html.DropDownList("TeacherId", ViewBag.TeacherList as SelectList, "-- Select Teacher --", new { @class = "form-control txtTeacher" })
+
+                    </div>
+
+                    <div class="container" style="margin-left:22%;">
+                        <div class="row">
+                            <div class="col-sm-9">
+                                <label>Start *</label>
+                                <div class="input-group date" id="dtp1">
+                                    <input type="text" id="txtStart" class="form-control" />
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <br />
+                    <div class="form-group" style="margin-left:25%;">
+                        <div class="checkbox">
+                            <label><input type="checkbox" id="chkIsFullDay" checked="checked" /><b> Is Full Day Event </b> </label>
+                        </div>
+                    </div>
+
+                    <div class="container" style="margin-left:22%;">
+                        <div class="row">
+                            <div id="divEndDate" style="display:none;">
+                                <div class="col-sm-9">
+                                    <label>End *</label>
+                                    <div class="input-group date" id="dtp2">
+                                        <input type="text" id="txtEnd" class="form-control" />
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <br />
+                    <div class="form-group" style="margin-left:25%;">
+                        <label>Description</label>
+                        <textarea id="txtDescription" rows="3" class="form-control"></textarea>
+                    </div>
+
+                    <div class="form-group" style="margin-left:25%;">
+                        <label>Theme Color</label>
+                        <select id="ddThemeColor" class="form-control">
+                            <option value="">Default</option>
+                            <option value="red">Red</option>
+                            <option value="indigo">Indigo</option>
+                            <option value="blue">Blue</option>
+                            <option value="yellow">Yellow</option>
+                            <option value="black">Black</option>
+                            <option value="grey">Grey</option>
+                            <option value="green">Green</option>
+                            <option value="aqua">Aqua</option>
+                            <option value="orange">Orange</option>
+                            <option value="gold">Gold</option>
+                            <option value="darkblue">DarkBlue</option>
+                            <option value="pink">Pink</option>
+                            <option value="violet">Violet</option>
+                            <option value="magenta">Magenta</option>
+                            <option value="purple">Purple</option>
+                            <option value="lime">Lime</option>
+                            <option value="olive">Olive</option>
+                            <option value="dodgerblue">LightBlue</option>
+                            <option value="brown">Brown</option>
+                            <option value="lightcoral">LightCoral</option>
+                            <option value="seagreen">SeaGreen</option>
+                            <option value="chocolate">Chocolate</option>
+                            <option value="orangered">OrangeRed</option>
+                            <option value="teal">Teal</option>
+                            <option value="springgreen">SpringGreen</option>
+                            <option value="khaki">Khaki</option>
+                            <option value="darkslategrey">DarkSlateGrey</option>
+                            <option value="deeppink">DeepPink</option>
+                            <option value="greenyellow">GreenYellow</option>
+                            <option value="aquamarine">Aquamarine</option>
+                        </select>
+                    </div>
+
+                    <hr />
+                    <div style="text-align:center">
+                        <!-- кнопка сохранить -->
+                        <button type="button" id="btnSave" class="btn btn-success" style="margin-right:10px;">Save</button>
+                        <!-- кнопка для закрития -->
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+
+                </form>
+                <!-- image loading -->
+                <div style="text-align:center;display:none;" id="loaderDiv">
+                    <img src="~/fonts/Loading.gif" width="75" />
+                </div>
+                <br /><br />
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- L I N K -->
+@*<link href="~/Content/fullcalendarStyle.css" rel="stylesheet" />  цвет для виходных *@
+<link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.print.css" rel="stylesheet" media="print" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+
+
+<!-- section scripts -->
+@section Scripts{
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.js"></script>
+    <script src='~/Content/fc/locale/en-ie.js'></script>                                   @* format time 12:00-24:00  *@
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+
+
+
+
+    <script>
+        $(document).ready(function () {
+
+            var events = [];
+            var selectedEvent = null;
+
+            FetchEventAndRenderCalendar();
+
+            function FetchEventAndRenderCalendar() {
+                var events = [];
+                $.ajax({
+                    type: "GET",
+                    url: "home/GetEvents",
+                    success: function (data) {
+                        $.each(data, function (i, v) {
+                            events.push({
+                                eventID: v.EventID,
+                                title: v.FormName + " , " + v.ClassRoomName + " , " + v.GroupName + " , " + v.SubjectName + " , " + v.TeacherName,
+                                formID: v.FormId,
+                                form: v.FormName,
+                                classroomID: v.ClassRoomId,
+                                classroom: v.ClassRoomName,
+                                groupID: v.GroupId,
+                                group: v.GroupName,
+                                subjectID: v.SubjectId,
+                                subject: v.SubjectName,
+                                teacherID: v.TeacherId,
+                                teacher: v.TeacherName,
+                                description: v.Description,
+                                start: moment(v.Start),
+                                end: v.End != null ? moment(v.End) : null,
+                                color: v.ThemeColor,
+                                allDay: v.IsFullDay
+                            });
+                        })
+                        GenerateCalender(events);
+                    },
+                    error: function (error) {
+                        alert('An error has occurred!');
+                    }
+                })
+            }
+
+
+            // згенерировать календарь
+            function GenerateCalender(events) {
+                $('#calender').fullCalendar('destroy');
+                $('#calender').fullCalendar({
+                                                                 // скрыть суботу и воскресение
+                    //hiddenDays:[0,6],                          // высота календаря
+                    contentHeight: 'auto', //480,                // текущая дата
+                    defaultDate: new Date(),                     // текущее время 'h(:mm)a'
+                    timeFormat: 'h(:mm)',                       // заголовок
+                    header: {                                    // с лева кнопка назад , вперед и сегодня
+                        left: 'prev,next today',                 // по центру дата и переключение года
+                        center: 'title prevYear,nextYear',       // с права просмотра месяц,неделя,день,список
+                        right: 'month,agendaWeek,agenda,basicDay,list'
+                    },
+                    eventLimit: true,                            // добавление в контейнер
+                    eventColor: '#378006',                       // цвет зеленый
+                    events: events,                              // собитие при нажатии  для показа информации
+                    eventClick: function (calEvent, jsEvent, view) {
+                        selectedEvent = calEvent;
+                        $('#myModal #eventTitle').text(calEvent.title);
+                        var $description = $('<div/>');
+                        $description.append($('<p/>').html('<b>Date Start : </b>' + calEvent.start.format("DD-MM-YYYY HH:mm ")));
+                        if (calEvent.end != null) {
+                            $description.append($('<p/>').html('<b>Date End : </b>' + calEvent.end.format("DD-MM-YYYY HH:mm ")));
+                        }
+
+                        $description.append($('<p/>').html('<b>Form Name : </b>' + calEvent.form));
+                        $description.append($('<p/>').html('<b>Class Name : </b>' + calEvent.classroom));
+                        $description.append($('<p/>').html('<b>Group Name : </b>' + calEvent.group));
+                        $description.append($('<p/>').html('<b>Subject Name : </b>' + calEvent.subject));
+                        $description.append($('<p/>').html('<b>Teacher Name : </b>' + calEvent.teacher));
+                        $description.append($('<p/>').html('<b>Description : </b> ' + calEvent.description));
+                        $('#myModal #pDetails').empty().html($description);     // очистить
+
+                        $('#myModal').modal();
+                    },
+                    selectable: true,  // по пустому полю добавляем
+                    select: function (start, end) {  // перетаскиваем событие
+                        selectedEvent = {
+                            eventID: 0,
+                            title: '',
+                            description: '',
+                            form: '',
+                            classroom: '',
+                            teacher: '',
+                            subject: '',
+                            group: '',
+                            start: start,
+                            end: end,
+                            allDay: false,
+                            color: ''
+                        };
+                        openAddEditForm();
+                        $('#calendar').fullCalendar('unselect');
+                    },
+                    editable: true,
+                    eventDrop: function (event) {    // перетаскиваем событие на другое число
+                        var data = {
+                            EventID: event.eventID,
+                            GroupId: event.title,
+                            FormId: event.formID,
+                            ClassRoomId: event.classroomID,
+                            GroupId: event.groupID,
+                            TeacherId: event.teacherID,
+                            SubjectId: event.subjectID,
+                            Start: event.start.format('DD/MM/YYYY HH:mm '),
+                            End: event.end != null ? event.end.format('DD/MM/YYYY HH:mm ') : null,
+                            Description: event.description,
+                            ThemeColor: event.color,
+                            IsFullDay: event.allDay
+                        };
+
+                        SaveEvent(data);
+                    }
+                })
+            }
+
+
+
+            // собития на кнопку редактирования (диалоговое окно)
+            $('#btnEdit').click(function () {
+                openAddEditForm();
+            })
+
+            // собития на кнопку удаления (диалоговое окно)
+            $('#btnDelete').click(function () {
+                if (selectedEvent != null && confirm('Are you sure ?')) {
+                    $.ajax({
+                        type: "POST",
+                        url: '/home/DeleteEvent',
+                        data: { 'eventID': selectedEvent.eventID },
+                        success: function (data) {
+                            if (data.status) {
+                                // (Обновляем) Получить данние и отображение календаря
+                                FetchEventAndRenderCalendar();
+                                $('#myModal').modal('hide');
+                            }
+                        },
+                        error: function () {
+                            alert('Failed Delete !!!');
+                        }
+                    })
+                }
+            })
+
+
+            // календарь 1 и 2 для редактирования
+            $('#dtp1,#dtp2').datetimepicker({
+                //locale: 'ru',
+                format: 'DD/MM/YYYY HH:mm '
+            });
+
+            // флажок isFullDay
+            $('#chkIsFullDay').change(function () {
+                if ($(this).is(':checked')) {       // скрыть дату 2
+                    $('#divEndDate').hide();
+                }
+                else {
+                    $('#divEndDate').show();        // показать дату 2
+                }
+            });
+
+            // функция добавления и изменения
+            function openAddEditForm() {
+                if (selectedEvent != null) {
+                    $('#hdEventID').val(selectedEvent.eventID);
+                    $('.txtForm').val(selectedEvent.formID);
+                    $('.txtClassRoom').val(selectedEvent.classroomID);
+                    $('.txtGroup').val(selectedEvent.groupID);
+                    $('.txtSubject').val(selectedEvent.subjectID);
+                    $('.txtTeacher').val(selectedEvent.teacherID);
+                    $('#txtStart').val(selectedEvent.start.format('DD/MM/YYYY HH:mm '));
+                    $('#chkIsFullDay').prop("checked", selectedEvent.allDay || false);
+                    $('#chkIsFullDay').change();
+                    $('#txtEnd').val(selectedEvent.end != null ? selectedEvent.end.format('DD/MM/YYYY HH:mm ') : '');
+                    $('#txtDescription').val(selectedEvent.description);
+                    $('#ddThemeColor').val(selectedEvent.color);
+                }
+                $('#myModal').modal('hide');
+                $('#myModalSave').modal();
+            }
+
+            // кнопка сохранить данные
+            $('#btnSave').click(function () {
+                // маленькая Валидация
+
+                // форма
+                if ($('.txtForm').val().trim() == "") {
+                    alert('Form required !');
+                    return;
+                }
+                // аудитория
+                if ($('.txtClassRoom').val().trim() == "") {
+                    alert('ClassRoom required !');
+                    return;
+                }
+                // группа
+                if ($('.txtGroup').val().trim() == "") {
+                    alert('Group required !');
+                    return;
+                }
+                // преподаватель
+                if ($('.txtTeacher').val().trim() == "") {
+                    alert('Teacher required !');
+                    return;
+                }
+                // предмет
+                if ($('.txtSubject').val().trim() == "") {
+                    alert('Subject required !');
+                    return;
+                }
+                // дата 1
+                if ($('#txtStart').val().trim() == "") {
+                    alert('Start Date required !');
+                    return;
+                }
+                // флажок
+                if ($('#chkIsFullDay').is(':checked') == false && $('#txtEnd').val().trim() == "") {
+                    alert('End Date required !');
+                    return;
+                }
+                else {
+                    var startDate = moment($('#txtStart').val(), "DD/MM/YYYY HH:mm ").toDate();
+                    var endDate = moment($('#txtEnd').val(), "DD/MM/YYYY HH:mm ").toDate();
+
+                    if (startDate > endDate) {
+                        alert('Invalid End Date');
+                        return;
+                    }
+                }
+                // данные
+                var data = {
+                    EventID: $('#hdEventID').val(),
+                    FormId: $('.txtForm').val(),
+                    ClassRoomId: $('.txtClassRoom').val(),
+                    GroupId: $('.txtGroup').val(),
+                    TeacherId: $('.txtTeacher').val(),
+                    SubjectId: $('.txtSubject').val(),
+                    Start: $('#txtStart').val().trim(),
+                    End: $('#chkIsFullDay').is(':checked') ? null : $('#txtEnd').val().trim(),
+                    Description: $('#txtDescription').val(),
+                    ThemeColor: $('#ddThemeColor').val(),
+                    IsFullDay: $('#chkIsFullDay').is(':checked')
+                }
+                SaveEvent(data);
+
+            })
+
+            // функция сохранения
+            function SaveEvent(data) {
+                $("#loaderDiv").show();
+                $.ajax({
+                    type: "POST",
+                    url: '/home/SaveEvent',
+                    data: data,
+                    success: function (data) {
+                        if (data.status) {
+                            $("#loaderDiv").hide();
+                            FetchEventAndRenderCalendar();
+                            $('#myModalSave').modal('hide');
+                        }
+                    },
+                    error: function () {
+                        alert('Could not write down the data!');
+                    }
+                })
+            }
+
+
+
+
+
+        });
+
+
+
+    </script>
+
+}
+
+

@@ -1,0 +1,38 @@
+﻿@model MvcCalendarEventV2Test.Models.CalendarClassRoom
+@{
+    ViewBag.Title = "Delete";
+}
+<h2>ClassRoom</h2>
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ClassRoomName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ClassRoomName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ClassRoomPlace)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ClassRoomPlace)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        <div class="form-actions no-color">
+            <input style="margin-right:10px;" type="button" class="btn btn-primary" value="Back to List" onclick="location.href='@Url.Action("Index", "CalendarClassRoom")'" />
+            <input type="submit" class="btn btn-danger" value="Delete" onclick="location.href='@Url.Action("Delete", "CalendarClassRoom")'" />
+        </div>
+    }
+</div>

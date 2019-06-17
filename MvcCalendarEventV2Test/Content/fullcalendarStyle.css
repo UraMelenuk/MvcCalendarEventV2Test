@@ -1,0 +1,14 @@
+﻿body {
+}
+
+
+/* Календарь  виходные другой цвет */
+.fc-sun {
+    background-color: limegreen;
+    color:yellow;
+}
+
+.fc-sat {
+    background-color: limegreen;
+    color: yellow;
+}

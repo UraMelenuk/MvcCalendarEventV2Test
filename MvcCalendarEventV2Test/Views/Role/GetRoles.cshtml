@@ -1,0 +1,30 @@
+﻿@{
+    ViewBag.Title = "GetRoles";
+}
+
+<h2>Get Roles for a User</h2>
+
+@using (Html.BeginForm("GetRoles", "Role"))
+{
+    @Html.AntiForgeryToken()
+    <p>
+        Username : @Html.DropDownList("UserName", (IEnumerable<SelectListItem>)ViewBag.Users)
+        <input type="submit" value="Get Roles for this User" class="btn btn-success" style="margin-left:20px;"/>
+    </p>
+}
+
+@if (ViewBag.RolesForThisUser != null)
+{
+    <div style="background-color:dodgerblue; color:white;">
+        <h3>Roles for this user </h3>
+        <ol>
+            @foreach (string s in ViewBag.RolesForThisUser)
+            {
+                <li>@s</li>
+            }
+        </ol>
+    </div>
+}
+<div>
+    <input type="button" class="btn btn-primary" value="Back to Role" onclick="location.href='@Url.Action("Index", "Role")'" />
+</div>

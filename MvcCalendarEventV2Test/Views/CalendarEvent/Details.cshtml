@@ -1,0 +1,66 @@
+﻿<table class="table table-bordered">
+
+    @if (ViewBag.EventList != null)
+    {
+        foreach (var item in ViewBag.EventList)
+        {
+            <tr>
+                <td><b>FormName</b></td>
+                <td>@item.FormName</td>
+            </tr>
+            <tr>
+                <td><b>ClassRoomName</b></td>
+                <td>@item.ClassRoomName</td>
+            </tr>
+            <tr>
+                <td><b>ClassRoomPlace</b></td>
+                <td>@item.ClassRoomPlace</td>
+            </tr>
+            <tr>
+                <td><b>GroupName</b></td>
+                <td>@item.GroupName</td>
+            </tr>
+            <tr>
+                <td><b>GroupCountPeople</b></td>
+                <td>@item.GroupCountPeople</td>
+            </tr>
+            <tr>
+                <td><b>SubjectName</b></td>
+                <td>@item.SubjectName</td>
+            </tr>
+            <tr>
+                <td><b>SubjectCountLesson</b></td>
+                <td>@item.SubjectCountLesson</td>
+            </tr>
+            <tr>
+                <td><b>TeacherName</b></td>
+                <td>@item.TeacherName</td>
+            </tr>
+            <tr>
+                <td><b>TeacherEmail</b></td>
+                <td>@item.TeacherEmail</td>
+            </tr>
+            <tr>
+                <td><b>DateStart</b></td>
+                <td>@item.Start</td>
+            </tr>
+            <tr>
+                <td><b>DateEnd</b></td>
+                <td>@item.End</td>
+            </tr>
+            <tr>
+                <td><b>IsFullDay</b></td>
+                <td>@item.IsFullDay</td>
+            </tr>
+            <tr>
+                <td><b>ThemeColor</b></td>
+                <td>@item.ThemeColor</td>
+            </tr>
+            <tr>
+                <td><b>Description</b></td>
+                <td>@item.Description</td>
+            </tr>
+        }
+    }
+
+</table>
